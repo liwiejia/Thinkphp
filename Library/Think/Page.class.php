@@ -10,14 +10,14 @@
 // +----------------------------------------------------------------------
 namespace Think;
 
-class Page{
+class Page
+{
     public $firstRow; // 起始行数
     public $listRows; // 列表每页显示行数
     public $parameter; // 分页跳转时要带的参数
     public $totalRows; // 总行数
     public $totalPages; // 分页总页面数
     public $rollPage   = 11;// 分页栏每页显示的页数
-	public $lastSuffix = true; // 最后一页是否显示总页数
 
     private $p       = 'p'; //分页参数名
     private $url     = ''; //当前链接URL
@@ -30,7 +30,7 @@ class Page{
         'next'   => '>>',
         'first'  => '1...',
         'last'   => '...%TOTAL_PAGE%',
-        'theme'  => '%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%',
+        'theme'  => '<ul class="pagination"><li class="pre">%UP_PAGE%</li><li>%FIRST%</li><li>%LINK_PAGE%</li><li>%END%</li><li>%DOWN_PAGE%</li></ul>',
     );
 
     /**
@@ -39,7 +39,8 @@ class Page{
      * @param array $listRows  每页显示记录数
      * @param array $parameter  分页跳转的参数
      */
-    public function __construct($totalRows, $listRows=20, $parameter = array()) {
+    public function __construct($totalRows, $listRows = 20, $parameter = array())
+    {
         C('VAR_PAGE') && $this->p = C('VAR_PAGE'); //设置分页参数名称
         /* 基础设置 */
         $this->totalRows  = $totalRows; //设置总记录数
@@ -55,7 +56,8 @@ class Page{
      * @param string $name  设置名称
      * @param string $value 设置值
      */
-    public function setConfig($name,$value) {
+    public function setConfig($name, $value)
+    {
         if(isset($this->config[$name])) {
             $this->config[$name] = $value;
         }
@@ -66,7 +68,8 @@ class Page{
      * @param  integer $page 页码
      * @return string
      */
-    private function url($page){
+    private function url($page)
+    {
         return str_replace(urlencode('[PAGE]'), $page, $this->url);
     }
 
@@ -74,8 +77,11 @@ class Page{
      * 组装分页链接
      * @return string
      */
-    public function show() {
-        if(0 == $this->totalRows) return '';
+    public function show()
+    {
+        if (0 == $this->totalRows) {
+            return '';
+        }
 
         /* 生成URL */
         $this->parameter[$this->p] = '[PAGE]';
@@ -89,15 +95,14 @@ class Page{
         /* 计算分页临时变量 */
         $now_cool_page      = $this->rollPage/2;
 		$now_cool_page_ceil = ceil($now_cool_page);
-		$this->lastSuffix && $this->config['last'] = $this->totalPages;
 
         //上一页
         $up_row  = $this->nowPage - 1;
-        $up_page = $up_row > 0 ? '<a class="prev" href="' . $this->url($up_row) . '">' . $this->config['prev'] . '</a>' : '';
+        $up_page = $up_row > 0 ? '<li class="prev"><a rel="prev" href="' . $this->url($up_row) . '">' . $this->config['prev'] . '</a>' : '';
 
         //下一页
         $down_row  = $this->nowPage + 1;
-        $down_page = ($down_row <= $this->totalPages) ? '<a class="next" href="' . $this->url($down_row) . '">' . $this->config['next'] . '</a>' : '';
+        $down_page = ($down_row <= $this->totalPages) ? '<li class="next"><a rel="next" href="' . $this->url($down_row) . '">' . $this->config['next'] . '</a></li>' : '';
 
         //第一页
         $the_first = '';
@@ -124,13 +129,13 @@ class Page{
             if($page > 0 && $page != $this->nowPage){
 
                 if($page <= $this->totalPages){
-                    $link_page .= '<a class="num" href="' . $this->url($page) . '">' . $page . '</a>';
+                    $link_page .= '<li><a href="' . $this->url($page) . '">' . $page . '</a></li>';
                 }else{
                     break;
                 }
             }else{
-                if($page > 0 && $this->totalPages != 1){
-                    $link_page .= '<span class="current">' . $page . '</span>';
+                if ($page > 0 && 1 != $this->totalPages) {
+                    $link_page .= '<li class="active"><a href="javascript:void(0);">' . $page . '</a></li>';
                 }
             }
         }
