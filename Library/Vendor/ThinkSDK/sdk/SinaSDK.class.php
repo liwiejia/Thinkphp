@@ -77,7 +77,7 @@ class SinaSDK extends ThinkOauth
             unset($data['uid']);
             return $data;
         } else {
-            throw new \think\Exception("获取新浪微博ACCESS_TOKEN出错：{$data['error']}");
+            throw Exception("获取新浪微博ACCESS_TOKEN出错：{$data['error']}");
         }
     }
 

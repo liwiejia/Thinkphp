@@ -167,6 +167,7 @@ abstract class ThinkOauth{
             'code'          => $code,
             'redirect_uri'  => $this->Callback,
         );
+
         $data = $this->http($this->GetAccessTokenURL, $params, 'POST');
         $this->Token = $this->parseToken($data, $extend);
         return $this->Token;
